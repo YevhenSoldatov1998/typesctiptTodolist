@@ -1,7 +1,7 @@
 export interface ITodoLists {
     id: string,
     title: string,
-    // tasks: ITask[],
+    tasks: any,
     filterValue: string
 }
 export interface ITask {

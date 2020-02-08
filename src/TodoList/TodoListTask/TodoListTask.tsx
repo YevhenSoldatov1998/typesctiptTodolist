@@ -5,7 +5,7 @@ import {useState} from 'react'
 interface IProps {
     deleteTask: Function,
     changeIsDone: Function,
-    todoId: number,
+    todoId: string,
     task: any,
     changeTitleTask: Function
 

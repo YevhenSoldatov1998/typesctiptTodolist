@@ -6,7 +6,7 @@ interface IProps {
     deleteTask: Function,
     changeIsDone: Function,
     changeTitleTask: Function,
-    todoId: number,
+    todoId: string,
     tasks: any[]
 }
 

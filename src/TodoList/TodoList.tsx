@@ -8,29 +8,28 @@ import TodoListFooter from "./TodoListFooter";
 
 interface ITodoList {
     deleteTodoListThunk: Function,
-    addTask: Function,
+    addTodoListTaskThunk: Function,
     deleteTodoList: Function,
     changeTitleTask: Function,
     changeIsDone: Function,
     changeFilter: Function
-    todoId: number,
+    todoId: string,
     filterValue: string,
     tasks: any,
     title: string,
 }
 
 const TodoList: React.FC<ITodoList> = ({
-                                           title,
+                                           title, addTodoListTaskThunk,
                                            changeIsDone, deleteTodoListThunk,
-                                           addTask, tasks, filterValue,
+                                           tasks, filterValue,
                                            changeTitleTask,changeFilter,
                                            todoId, ...props
                                        }) => {
-    let [id, setId] = useState(3);
     const call_addTask = (title: string) => {
-        setId(id + 1);
-        let task = {id: id, title: title, isDone: false, priority: "low"};
-        addTask(task, todoId)
+        let task = {title: title, status: false, priority: "low"};
+        debugger
+        addTodoListTaskThunk(todoId, task)
     };
     const call_deleteTodoList = () => {
         deleteTodoListThunk(todoId)

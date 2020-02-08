@@ -2,7 +2,7 @@ import React from 'react';
 import '../App.css';
 interface IProps {
     changeFilter: Function,
-    todoId: number,
+    todoId: string,
     filterValue: string
 }
 class TodoListFooter extends React.Component<IProps> {
