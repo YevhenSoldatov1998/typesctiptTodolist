@@ -44,8 +44,10 @@ const App: React.FC<packedPropsType> = ({
 
     useEffect(() => {
         props.getTodoListsThunk();
-        todoListAPI.addTask()
-        todoListAPI.getTask()
+        todoListAPI.addTask().then(res => {
+            debugger
+        })
+        // todoListAPI.getTask()
     }, []);
 
     return (
