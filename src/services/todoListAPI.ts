@@ -4,16 +4,23 @@ export const todoListAPI = {
     getTodoLists: () => {
         return instance.get('todo-lists')
     },
-    getTodoListsTask: (todoListId: string) => {
-        return instance.get(`todo-lists/${todoListId}/tasks`)
-    },
     deleteTodoListItem: (todoListId: string) => {
         return instance.delete(`todo-lists/${todoListId}`)
     },
     addTodoLists: (title: string) => {
         return instance.post('todo-lists', {title})
     },
-    addTodoListTask: (todoListId: string, task: any) => {
-        return instance.post(`todo-lists/${todoListId}/tasks`, {task})
-    }
+    getTask: (todoListId: string) => {
+        return instance.get(`todo-lists/c521caf2-5458-4f2a-b3f0-232f2b1f5a29/tasks`).then(res=>{
+            debugger
+        })
+    },
+    addTask: (todoListId: string, task: any) => {
+        task = {title: 'TEST'};
+        return instance.post(`todo-lists/c521caf2-5458-4f2a-b3f0-232f2b1f5a29/tasks`, {
+            task
+        }).then(res=> {
+            debugger
+        })
+    },
 }

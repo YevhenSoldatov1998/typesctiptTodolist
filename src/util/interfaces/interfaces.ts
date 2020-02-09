@@ -1,7 +1,7 @@
-export interface ITodoLists {
+export interface ITodoList {
     id: string,
     title: string,
-    tasks: any,
+    tasks: any[],
     filterValue: string
 }
 export interface ITask {
@@ -11,5 +11,5 @@ export interface ITask {
     priority: string
 }
 export interface IState {
-    todoLists: ITodoLists[],
+    todoLists: ITodoList[],
 }

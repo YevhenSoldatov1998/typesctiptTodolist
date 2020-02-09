@@ -12,6 +12,9 @@ import {
     changeTitleTask,
     deleteTodoList, deleteTodoListThunk, getTodoListsThunk
 } from "./redux/todo-reducer";
+import {appStateType} from "./redux/store";
+import {ITodoList} from "./util/interfaces/interfaces";
+import {todoListAPI} from "./services/todoListAPI";
 
 interface IProps {
     addTodoListThunk: Function,
@@ -23,10 +26,12 @@ interface IProps {
     getTodoListsThunk: Function
     deleteTodoListThunk: Function,
     addTodoListTaskThunk: Function,
-    todoLists: any,
 }
-
-const App: React.FC<IProps> = ({
+interface IMapStateToProps {
+    todoLists: ITodoList[]
+}
+type packedPropsType = IProps & IMapStateToProps
+const App: React.FC<packedPropsType> = ({
                                    addTodoListThunk, todoLists,
                                    deleteTodoList,
                                    changeIsDone, changeTitleTask,
@@ -39,6 +44,8 @@ const App: React.FC<IProps> = ({
 
     useEffect(() => {
         props.getTodoListsThunk();
+        todoListAPI.addTask()
+        todoListAPI.getTask()
     }, []);
 
     return (
@@ -67,7 +74,7 @@ const App: React.FC<IProps> = ({
     );
 }
 
-let mapStateToProps = (state: any) => {
+let mapStateToProps = (state: appStateType): IMapStateToProps=> {
     return {
         todoLists: state.todo.todoLists
     }
