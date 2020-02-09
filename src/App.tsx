@@ -5,16 +5,15 @@ import AddNewItemForm from "./AddNewItemForm";
 import {compose} from "redux";
 import {connect} from "react-redux";
 import {
-    addTodoListTaskThunk,
+    addTaskThunk,
     addTodoListThunk,
     changeFilter,
     changeIsDone,
-    changeTitleTask,
-    deleteTodoList, deleteTodoListThunk, getTodoListsThunk
+    changeTitleTask, deleteTaskThunk,
+    deleteTodoList, deleteTodoListThunk, getTaskThunk, getTodoListsThunk
 } from "./redux/todo-reducer";
 import {appStateType} from "./redux/store";
 import {ITodoList} from "./util/interfaces/interfaces";
-import {todoListAPI} from "./services/todoListAPI";
 
 interface IProps {
     addTodoListThunk: Function,
@@ -25,7 +24,9 @@ interface IProps {
 
     getTodoListsThunk: Function
     deleteTodoListThunk: Function,
-    addTodoListTaskThunk: Function,
+    getTaskThunk: Function,
+    addTaskThunk: Function,
+    deleteTaskThunk: Function,
 }
 interface IMapStateToProps {
     todoLists: ITodoList[]
@@ -36,7 +37,7 @@ const App: React.FC<packedPropsType> = ({
                                    deleteTodoList,
                                    changeIsDone, changeTitleTask,
                                    deleteTodoListThunk, changeFilter,
-                                   addTodoListTaskThunk, ...props
+                                   addTaskThunk, getTaskThunk,deleteTaskThunk, ...props
                                }) => {
     const call_addTodoList = (title: string) => {
         addTodoListThunk(title);
@@ -44,10 +45,6 @@ const App: React.FC<packedPropsType> = ({
 
     useEffect(() => {
         props.getTodoListsThunk();
-        todoListAPI.addTask().then(res => {
-            debugger
-        })
-        // todoListAPI.getTask()
     }, []);
 
     return (
@@ -59,15 +56,16 @@ const App: React.FC<packedPropsType> = ({
                 {todoLists.map((tl: any) => {
                     return <TodoList todoId={tl.id}
                                      key={tl.id}
-                                     tasks={tl.tasks = []}
+                                     tasks={tl.tasks}
                                      title={tl.title}
                                      filterValue={tl.filterValue = 'All'}
-                                     deleteTodoList={deleteTodoList}
-                                     addTodoListTaskThunk = {addTodoListTaskThunk}
+                                     deleteTaskThunk={deleteTaskThunk}
                                      changeIsDone={changeIsDone}
                                      changeTitleTask={changeTitleTask}
                                      deleteTodoListThunk={deleteTodoListThunk}
                                      changeFilter={changeFilter}
+                                     getTaskThunk = {getTaskThunk}
+                                     addTaskThunk = {addTaskThunk}
 
                     />
                 })}
@@ -87,7 +85,7 @@ export default compose(
         deleteTodoList, changeIsDone,
         changeTitleTask,
         changeFilter,getTodoListsThunk, deleteTodoListThunk,
-        addTodoListThunk, addTodoListTaskThunk
+        addTodoListThunk, getTaskThunk, addTaskThunk, deleteTaskThunk
     })
 )(App);
 

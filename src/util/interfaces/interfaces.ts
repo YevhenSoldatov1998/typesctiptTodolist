@@ -5,10 +5,17 @@ export interface ITodoList {
     filterValue: string
 }
 export interface ITask {
-    id: number,
+    description?: string,
     title: string,
-    isDone: boolean,
-    priority: string
+    completed: boolean,
+    status: number,
+    priority: number,
+    startDate?: string,
+    deadline?: string,
+    id: string,
+    todoListId: string,
+    order: number,
+    addedDate: string,
 }
 export interface IState {
     todoLists: ITodoList[],

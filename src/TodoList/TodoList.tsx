@@ -1,39 +1,45 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import '../App.css';
 import TodoListTitle from "./TodoListTitle";
 import AddNewItemForm from "../AddNewItemForm";
 import TodoListTasks from "./TodoListTasks";
 import {useState} from 'react'
 import TodoListFooter from "./TodoListFooter";
+import {ITask} from "../util/interfaces/interfaces";
 
 interface ITodoList {
     deleteTodoListThunk: Function,
-    addTodoListTaskThunk: Function,
     deleteTodoList: Function,
     changeTitleTask: Function,
     changeIsDone: Function,
     changeFilter: Function
     todoId: string,
     filterValue: string,
-    tasks: any,
+    tasks: Array<ITask>,
     title: string,
+    getTaskThunk: Function,
+    addTaskThunk: Function,
+    deleteTaskThunk: Function
 }
 
 const TodoList: React.FC<ITodoList> = ({
-                                           title, addTodoListTaskThunk,
+                                           title, getTaskThunk,
+                                           addTaskThunk,
                                            changeIsDone, deleteTodoListThunk,
                                            tasks, filterValue,
-                                           changeTitleTask,changeFilter,
+                                           changeTitleTask,changeFilter,deleteTaskThunk,
                                            todoId, ...props
                                        }) => {
     const call_addTask = (title: string) => {
-        let task = {title: title, status: false, priority: "low"};
-        debugger
-        addTodoListTaskThunk(todoId, task)
+        addTaskThunk(todoId, title)
     };
     const call_deleteTodoList = () => {
         deleteTodoListThunk(todoId)
-    }
+    };
+    useEffect(() => {
+        getTaskThunk(todoId)
+    }, []);
+
     return (
         <div className="todoList">
             <div className="todoList-header">
@@ -41,7 +47,7 @@ const TodoList: React.FC<ITodoList> = ({
                 <TodoListTitle title={title}/>
                 <AddNewItemForm addTodo={call_addTask}/>
             </div>
-            <TodoListTasks tasks={tasks.filter((task: any) => {
+            <TodoListTasks tasks={tasks && tasks.filter((task: any) => {
                 if (filterValue === 'All') {
                     return task
                 } else if (filterValue === 'Completed') {
@@ -53,7 +59,7 @@ const TodoList: React.FC<ITodoList> = ({
                            todoId={todoId}
                            changeIsDone={changeIsDone}
                            changeTitleTask={changeTitleTask}
-                           deleteTask={()=>{}}
+                           deleteTask={deleteTaskThunk}
 
             />
             <TodoListFooter todoId={todoId}

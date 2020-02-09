@@ -1,4 +1,4 @@
-import {IState} from "../util/interfaces/interfaces";
+import {IState, ITask} from "../util/interfaces/interfaces";
 import {todoListAPI} from "../services/todoListAPI";
 
 const ADD_TODO_LIST = 'ADD_TODO_LIST';
@@ -10,17 +10,22 @@ const CHANGE_FILTER = 'CHANGE_FILTER';
 
 const SET_TODO_LISTS = 'SET_TODO_LISTS';
 const DELETE_TASK = 'DELETE_TASK';
-const SET_TODO_LIST_TASKS = 'SET_TODO_LIST_TASKS';
+const SET_TASKS = 'SET_TASKS';
 
 const addTodoList = (newTodo: any) => ({type: ADD_TODO_LIST, newTodo});
 export const deleteTodoList = (todoId: string) => ({type: DELETE_TODO_LIST, todoId});
 export const changeIsDone = (todoId: number, taskId: number) => ({type: CHANGE_IS_DONE, todoId, taskId});
 export const addTask = (task: any, todoId: number) => ({type: ADD_TASK, task, todoId});
-// export const deleteTask = (todoId: number, taskId: number) => ({type: DELETE_TASK, todoId, taskId});
-export const changeTitleTask = (todoId: number, taskId: number, body: string) => ({type: CHANGE_TITLE_TASK, todoId, taskId, body});
+export const changeTitleTask = (todoId: number, taskId: number, body: string) => ({
+    type: CHANGE_TITLE_TASK,
+    todoId,
+    taskId,
+    body
+});
 export const changeFilter = (todoId: number, value: boolean) => ({type: CHANGE_FILTER, todoId, value});
-const setTodoLists = (todoLists: any) => ({type: SET_TODO_LISTS,  todoLists});
-// const setTodoListTasks = (tasks: any) => ({type: SET_TODO_LIST_TASKS,  tasks});
+const setTodoLists = (todoLists: any) => ({type: SET_TODO_LISTS, todoLists});
+const setTasks = (tasks: Array<ITask>, todoListId: string) => ({type: SET_TASKS, tasks, todoListId});
+const deleteTask = (todoListId: string, taskId: string) => ({type: DELETE_TASK, todoListId, taskId});
 
 export const getTodoListsThunk = () => (dispatch: Function) => {
     todoListAPI.getTodoLists().then(res => {
@@ -29,7 +34,6 @@ export const getTodoListsThunk = () => (dispatch: Function) => {
 
     })
 };
-
 export const deleteTodoListThunk = (todoListId: string) => (dispatch: Function) => {
     todoListAPI.deleteTodoListItem(todoListId)
         .then(res => {
@@ -41,7 +45,6 @@ export const deleteTodoListThunk = (todoListId: string) => (dispatch: Function) 
 
         })
 };
-
 export const addTodoListThunk = (title: string) => (dispatch: Function) => {
     todoListAPI.addTodoLists(title).then(res => {
         if (res.data.resultCode === 0) {
@@ -49,14 +52,26 @@ export const addTodoListThunk = (title: string) => (dispatch: Function) => {
         }
     })
 };
-export const addTodoListTaskThunk = (todoListId: string, task: any) => (dispatch: Function) => {
-        todoListAPI.addTodoListTask(todoListId, task)
-            .then(res => {
-                debugger
-            })
+export const deleteTaskThunk = (todoListId: string, taskId: string) => (dispatch: Function) => {
+    todoListAPI.deleteTask(todoListId, taskId)
+        .then(res =>{
+            dispatch(deleteTask(todoListId, taskId))
+        })
+}
+export const addTaskThunk = (todoListId: string, task: any) => (dispatch: Function) => {
+    todoListAPI.addTask(todoListId, task).then(res => {
+        debugger
+    })
+}
+export const getTaskThunk = (todoListId: string) => (dispatch: Function) => {
+    todoListAPI.getTask(todoListId).then(res => {
+        debugger
+        dispatch(setTasks(res.data.items, todoListId))
+
+    })
 }
 
-const initialState: IState= {
+const initialState: IState = {
     todoLists: []
 };
 
@@ -88,6 +103,18 @@ export const todoReducer = (state = initialState, action: any) => {
                         }
                     } else {
                         return el
+                    }
+                })
+            }
+        case SET_TASKS:
+            return {
+                ...state,
+                todoLists: state.todoLists.map(todo => {
+                    if (todo.id === action.todoListId) {
+                        return {...todo,
+                            tasks: [...action.tasks]}
+                    } else {
+                        return todo
                     }
                 })
             }
@@ -127,30 +154,29 @@ export const todoReducer = (state = initialState, action: any) => {
         //             }
         //         })]
         //     }
-        // case DELETE_TASK:
-        //     return {
-        //         ...state,
-        //         todoLists: state.todoLists.map(objItem => {
-        //             if (objItem.id === action.todoId) {
-        //                 return {
-        //                     ...objItem,
-        //                     tasks: objItem.tasks.filter(el => el.id !== action.taskId)
-        //                 }
-        //
-        //             } else return {...objItem}
-        //         })
-        //     }
-        case CHANGE_FILTER:
-            return  {
+        case DELETE_TASK:
+            return {
                 ...state,
                 todoLists: state.todoLists.map(objItem => {
-                    if(objItem.id === action.todoId){
-                        return  {
+                    if (objItem.id === action.todoListId) {
+                        return {
+                            ...objItem,
+                            tasks: objItem.tasks.filter(el => el.id !== action.taskId)
+                        }
+
+                    } else return {...objItem}
+                })
+            }
+        case CHANGE_FILTER:
+            return {
+                ...state,
+                todoLists: state.todoLists.map(objItem => {
+                    if (objItem.id === action.todoId) {
+                        return {
                             ...objItem,
                             filterValue: action.value
                         }
-                    }
-                    else{
+                    } else {
                         return {...objItem}
                     }
                 })
