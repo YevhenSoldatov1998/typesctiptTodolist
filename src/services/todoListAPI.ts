@@ -1,4 +1,5 @@
 import {instance} from './instanceAxios'
+import {ITaskUpdate} from "../util/interfaces/interfaces";
 
 export const todoListAPI = {
     getTodoLists: () => {
@@ -18,5 +19,8 @@ export const todoListAPI = {
     },
     deleteTask: (todoListId: string, taskId: string) => {
         return instance.delete(`todo-lists/${todoListId}/tasks/${taskId}`)
+    },
+    updateTask: (todoListId: string, taskId: string, items: ITaskUpdate)=> {
+      return instance.put(`todo-lists/${todoListId}/tasks/${taskId}`, {...items})
     }
 }

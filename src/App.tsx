@@ -10,14 +10,13 @@ import {
     changeFilter,
     changeIsDone,
     changeTitleTask, deleteTaskThunk,
-    deleteTodoList, deleteTodoListThunk, getTaskThunk, getTodoListsThunk
+    deleteTodoList, deleteTodoListThunk, getTaskThunk, getTodoListsThunk, updateTaskThunk
 } from "./redux/todo-reducer";
 import {appStateType} from "./redux/store";
 import {ITodoList} from "./util/interfaces/interfaces";
 
 interface IProps {
     addTodoListThunk: Function,
-    deleteTodoList: Function,
     changeIsDone: Function,
     changeTitleTask: Function,
     changeFilter: Function,
@@ -27,24 +26,29 @@ interface IProps {
     getTaskThunk: Function,
     addTaskThunk: Function,
     deleteTaskThunk: Function,
+    updateTaskThunk: Function
 }
+
 interface IMapStateToProps {
     todoLists: ITodoList[]
 }
+
 type packedPropsType = IProps & IMapStateToProps
-const App: React.FC<packedPropsType> = ({
-                                   addTodoListThunk, todoLists,
-                                   deleteTodoList,
-                                   changeIsDone, changeTitleTask,
-                                   deleteTodoListThunk, changeFilter,
-                                   addTaskThunk, getTaskThunk,deleteTaskThunk, ...props
-                               }) => {
+const App: React.FC<packedPropsType> = (
+    {
+        addTodoListThunk, todoLists,
+        changeIsDone, changeTitleTask,
+        deleteTodoListThunk, changeFilter,
+        getTodoListsThunk,
+        addTaskThunk, getTaskThunk, deleteTaskThunk,
+        updateTaskThunk
+    }) => {
     const call_addTodoList = (title: string) => {
         addTodoListThunk(title);
     };
 
     useEffect(() => {
-        props.getTodoListsThunk();
+        getTodoListsThunk();
     }, []);
 
     return (
@@ -64,8 +68,9 @@ const App: React.FC<packedPropsType> = ({
                                      changeTitleTask={changeTitleTask}
                                      deleteTodoListThunk={deleteTodoListThunk}
                                      changeFilter={changeFilter}
-                                     getTaskThunk = {getTaskThunk}
-                                     addTaskThunk = {addTaskThunk}
+                                     getTaskThunk={getTaskThunk}
+                                     addTaskThunk={addTaskThunk}
+                                     updateTaskThunk = {updateTaskThunk}
 
                     />
                 })}
@@ -74,7 +79,7 @@ const App: React.FC<packedPropsType> = ({
     );
 }
 
-let mapStateToProps = (state: appStateType): IMapStateToProps=> {
+let mapStateToProps = (state: appStateType): IMapStateToProps => {
     return {
         todoLists: state.todo.todoLists
     }
@@ -84,8 +89,9 @@ export default compose(
     connect(mapStateToProps, {
         deleteTodoList, changeIsDone,
         changeTitleTask,
-        changeFilter,getTodoListsThunk, deleteTodoListThunk,
-        addTodoListThunk, getTaskThunk, addTaskThunk, deleteTaskThunk
+        changeFilter, getTodoListsThunk, deleteTodoListThunk,
+        addTodoListThunk, getTaskThunk, addTaskThunk, deleteTaskThunk,
+        updateTaskThunk
     })
 )(App);
 

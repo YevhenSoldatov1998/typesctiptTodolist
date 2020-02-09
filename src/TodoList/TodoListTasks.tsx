@@ -7,22 +7,28 @@ interface IProps {
     deleteTask: Function,
     changeIsDone: Function,
     changeTitleTask: Function,
+    updateTaskThunk: Function,
     todoId: string,
     tasks: Array<ITask>
 }
 
-const TodoListTasks: React.FC<IProps> = ({deleteTask, changeIsDone, changeTitleTask, todoId, ...props}) => {
+const TodoListTasks: React.FC<IProps> = (
+    {
+        tasks, deleteTask, updateTaskThunk,
+        changeIsDone, changeTitleTask, todoId
+    }) => {
     return (
         <div className="todoList-tasks">
-            {props.tasks && props.tasks.map((task, index) => {
+            {tasks && tasks.map((task, index) => {
                 return <TodoListTask
                     task={task}
                     key={task.id}
-                    numberTask = {index + 1}
+                    numberTask={index + 1}
                     changeIsDone={changeIsDone}
                     todoId={todoId}
                     changeTitleTask={changeTitleTask}
                     deleteTask={deleteTask}
+                    updateTaskThunk={updateTaskThunk}
                 />
             })}
         </div>

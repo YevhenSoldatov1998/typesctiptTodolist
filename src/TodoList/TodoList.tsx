@@ -9,7 +9,6 @@ import {ITask} from "../util/interfaces/interfaces";
 
 interface ITodoList {
     deleteTodoListThunk: Function,
-    deleteTodoList: Function,
     changeTitleTask: Function,
     changeIsDone: Function,
     changeFilter: Function
@@ -20,6 +19,7 @@ interface ITodoList {
     getTaskThunk: Function,
     addTaskThunk: Function,
     deleteTaskThunk: Function
+    updateTaskThunk: Function
 }
 
 const TodoList: React.FC<ITodoList> = ({
@@ -28,10 +28,10 @@ const TodoList: React.FC<ITodoList> = ({
                                            changeIsDone, deleteTodoListThunk,
                                            tasks, filterValue,
                                            changeTitleTask,changeFilter,deleteTaskThunk,
-                                           todoId, ...props
+                                           todoId, updateTaskThunk
                                        }) => {
     const call_addTask = (title: string) => {
-        addTaskThunk(todoId, title)
+        addTaskThunk(todoId, title )
     };
     const call_deleteTodoList = () => {
         deleteTodoListThunk(todoId)
@@ -60,6 +60,7 @@ const TodoList: React.FC<ITodoList> = ({
                            changeIsDone={changeIsDone}
                            changeTitleTask={changeTitleTask}
                            deleteTask={deleteTaskThunk}
+                           updateTaskThunk={updateTaskThunk}
 
             />
             <TodoListFooter todoId={todoId}

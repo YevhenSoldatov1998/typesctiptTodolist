@@ -1,4 +1,4 @@
-import {IState, ITask} from "../util/interfaces/interfaces";
+import {IState, ITask, ITaskUpdate} from "../util/interfaces/interfaces";
 import {todoListAPI} from "../services/todoListAPI";
 
 const ADD_TODO_LIST = 'ADD_TODO_LIST';
@@ -11,11 +11,11 @@ const CHANGE_FILTER = 'CHANGE_FILTER';
 const SET_TODO_LISTS = 'SET_TODO_LISTS';
 const DELETE_TASK = 'DELETE_TASK';
 const SET_TASKS = 'SET_TASKS';
+const UPDATE_TASK = 'UPDATE_TASK';
 
 const addTodoList = (newTodo: any) => ({type: ADD_TODO_LIST, newTodo});
 export const deleteTodoList = (todoId: string) => ({type: DELETE_TODO_LIST, todoId});
 export const changeIsDone = (todoId: number, taskId: number) => ({type: CHANGE_IS_DONE, todoId, taskId});
-export const addTask = (task: any, todoId: number) => ({type: ADD_TASK, task, todoId});
 export const changeTitleTask = (todoId: number, taskId: number, body: string) => ({
     type: CHANGE_TITLE_TASK,
     todoId,
@@ -26,6 +26,8 @@ export const changeFilter = (todoId: number, value: boolean) => ({type: CHANGE_F
 const setTodoLists = (todoLists: any) => ({type: SET_TODO_LISTS, todoLists});
 const setTasks = (tasks: Array<ITask>, todoListId: string) => ({type: SET_TASKS, tasks, todoListId});
 const deleteTask = (todoListId: string, taskId: string) => ({type: DELETE_TASK, todoListId, taskId});
+const addTask = (item: ITask, todoListId: string) => ({type: ADD_TASK, item, todoListId});
+const updateTask = (todoListId: string, taskId: string, item: ITask) => ({type: UPDATE_TASK, todoListId, taskId, item});
 
 export const getTodoListsThunk = () => (dispatch: Function) => {
     todoListAPI.getTodoLists().then(res => {
@@ -54,13 +56,16 @@ export const addTodoListThunk = (title: string) => (dispatch: Function) => {
 };
 export const deleteTaskThunk = (todoListId: string, taskId: string) => (dispatch: Function) => {
     todoListAPI.deleteTask(todoListId, taskId)
-        .then(res =>{
+        .then(res => {
             dispatch(deleteTask(todoListId, taskId))
         })
 }
 export const addTaskThunk = (todoListId: string, task: any) => (dispatch: Function) => {
     todoListAPI.addTask(todoListId, task).then(res => {
-        debugger
+        if (res.data.resultCode === 0) {
+            debugger
+            dispatch(addTask(res.data.data.item, todoListId))
+        }
     })
 }
 export const getTaskThunk = (todoListId: string) => (dispatch: Function) => {
@@ -70,7 +75,15 @@ export const getTaskThunk = (todoListId: string) => (dispatch: Function) => {
 
     })
 }
-
+export const updateTaskThunk = (todoListId: string, taskId: string, items: ITaskUpdate) => (dispatch: Function) => {
+    todoListAPI.updateTask(todoListId, taskId, items)
+        .then(res => {
+            if (res.data.resultCode === 0) {
+                debugger
+                dispatch(updateTask(todoListId, taskId, res.data.data.item))
+            }
+        })
+}
 const initialState: IState = {
     todoLists: []
 };
@@ -96,13 +109,14 @@ export const todoReducer = (state = initialState, action: any) => {
             return {
                 ...state,
                 todoLists: state.todoLists.map(el => {
-                    if (el.id === action.todoId) {
+                    debugger
+                    if (el.id === action.todoListId) {
                         return {
                             ...el,
-                            tasks: [...el.tasks, action.task]
+                            tasks: [...el.tasks, action.item]
                         }
                     } else {
-                        return el
+                        return {...el}
                     }
                 })
             }
@@ -111,10 +125,32 @@ export const todoReducer = (state = initialState, action: any) => {
                 ...state,
                 todoLists: state.todoLists.map(todo => {
                     if (todo.id === action.todoListId) {
-                        return {...todo,
-                            tasks: [...action.tasks]}
+                        return {
+                            ...todo,
+                            tasks: [...action.tasks]
+                        }
                     } else {
                         return todo
+                    }
+                })
+            }
+        case UPDATE_TASK:
+            return {
+                ...state,
+                todoLists: state.todoLists.map(el => {
+                    if (el.id === action.todoListId) {
+                        return {
+                            ...el,
+                            tasks: el.tasks.map(task => {
+                                if (task.id === action.taskId) {
+                                    return {
+                                        ...task, ...action.item
+                                    }
+                                } else return task
+                            })
+                        }
+                    } else {
+                        return {...el}
                     }
                 })
             }
