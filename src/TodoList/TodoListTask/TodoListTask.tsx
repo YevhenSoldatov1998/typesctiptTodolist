@@ -1,7 +1,7 @@
 import React, {ChangeEvent} from 'react';
 import '../../App.css';
 import {useState} from 'react'
-import {ITask} from "../../util/interfaces/interfaces";
+import {ITask} from "../../types/interfaces";
 
 interface IProps {
     deleteTask: Function,
@@ -17,7 +17,7 @@ const TodoListTask: React.FC<IProps> = ({deleteTask, updateTaskThunk, changeIsDo
     const [editMode, setEditMode] = useState(false);
     const [title, setTitle] = useState(task.title);
     const onIsDoneChanged = () => {
-        changeIsDone(todoId, task.id);
+        changeIsDone(todoId, task._id);
     };
 
     const call_changeTitleTask = (e: ChangeEvent<HTMLInputElement>) => {
@@ -28,12 +28,12 @@ const TodoListTask: React.FC<IProps> = ({deleteTask, updateTaskThunk, changeIsDo
     const activateEditMode = () => setEditMode(true);
 
     const deactivateEditMode = () =>{
-        updateTaskThunk(todoId, task.id, {title});
+        updateTaskThunk(todoId, task._id, {title});
         setEditMode(false)
     };
 
     const call_deleteTask = () => {
-        deleteTask(todoId, task.id)};
+        deleteTask(todoId, task._id)};
 
     let containerCssClass = task.status ? "todoList-task done" : "todoList-task";
 

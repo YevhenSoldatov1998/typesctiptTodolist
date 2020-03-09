@@ -1,5 +1,5 @@
 export interface ITodoList {
-    id: string,
+    _id: string,
     title: string,
     tasks: any[],
     filterValue: string
@@ -12,7 +12,7 @@ export interface ITask {
     priority: number,
     startDate?: string,
     deadline?: string,
-    id: string,
+    _id: string,
     todoListId: string,
     order: number,
     addedDate: string,

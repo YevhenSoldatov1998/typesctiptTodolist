@@ -13,7 +13,7 @@ import {
     deleteTodoList, deleteTodoListThunk, getTaskThunk, getTodoListsThunk, updateTaskThunk
 } from "./redux/todo-reducer";
 import {appStateType} from "./redux/store";
-import {ITodoList} from "./util/interfaces/interfaces";
+import {ITodoList} from "./types/interfaces";
 
 interface IProps {
     addTodoListThunk: Function,
@@ -58,8 +58,8 @@ const App: React.FC<packedPropsType> = (
             </div>
             <div className="App">
                 {todoLists.map((tl: any) => {
-                    return <TodoList todoId={tl.id}
-                                     key={tl.id}
+                    return <TodoList todoId={tl._id}
+                                     key={tl._id}
                                      tasks={tl.tasks}
                                      title={tl.title}
                                      filterValue={tl.filterValue = 'All'}
@@ -87,8 +87,7 @@ let mapStateToProps = (state: appStateType): IMapStateToProps => {
 
 export default compose(
     connect(mapStateToProps, {
-        deleteTodoList, changeIsDone,
-        changeTitleTask,
+        deleteTodoList, changeIsDone, changeTitleTask,
         changeFilter, getTodoListsThunk, deleteTodoListThunk,
         addTodoListThunk, getTaskThunk, addTaskThunk, deleteTaskThunk,
         updateTaskThunk

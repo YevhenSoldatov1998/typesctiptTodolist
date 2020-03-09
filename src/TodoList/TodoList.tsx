@@ -5,7 +5,7 @@ import AddNewItemForm from "../AddNewItemForm";
 import TodoListTasks from "./TodoListTasks";
 import {useState} from 'react'
 import TodoListFooter from "./TodoListFooter";
-import {ITask} from "../util/interfaces/interfaces";
+import {ITask} from "../types/interfaces";
 
 interface ITodoList {
     deleteTodoListThunk: Function,
@@ -27,11 +27,11 @@ const TodoList: React.FC<ITodoList> = ({
                                            addTaskThunk,
                                            changeIsDone, deleteTodoListThunk,
                                            tasks, filterValue,
-                                           changeTitleTask,changeFilter,deleteTaskThunk,
+                                           changeTitleTask, changeFilter, deleteTaskThunk,
                                            todoId, updateTaskThunk
                                        }) => {
     const call_addTask = (title: string) => {
-        addTaskThunk(todoId, title )
+        addTaskThunk(todoId, title)
     };
     const call_deleteTodoList = () => {
         deleteTodoListThunk(todoId)

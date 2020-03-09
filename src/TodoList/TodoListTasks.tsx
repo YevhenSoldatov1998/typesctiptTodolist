@@ -1,7 +1,7 @@
 import React from 'react';
 import '../App.css';
 import TodoListTask from "./TodoListTask/TodoListTask";
-import {ITask} from "../util/interfaces/interfaces";
+import {ITask} from "../types/interfaces";
 
 interface IProps {
     deleteTask: Function,
@@ -22,7 +22,7 @@ const TodoListTasks: React.FC<IProps> = (
             {tasks && tasks.map((task, index) => {
                 return <TodoListTask
                     task={task}
-                    key={task.id}
+                    key={task._id}
                     numberTask={index + 1}
                     changeIsDone={changeIsDone}
                     todoId={todoId}
