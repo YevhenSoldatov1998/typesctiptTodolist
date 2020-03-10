@@ -51,9 +51,9 @@ const TodoList: React.FC<ITodoList> = ({
                 if (filterValue === 'All') {
                     return task
                 } else if (filterValue === 'Completed') {
-                    return task.isDone
+                    return task.status
                 } else if (filterValue === 'Active') {
-                    return !task.isDone
+                    return !task.status
                 }
             })}
                            todoId={todoId}

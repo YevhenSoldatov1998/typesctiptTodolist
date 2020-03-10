@@ -62,7 +62,7 @@ const App: React.FC<packedPropsType> = (
                                      key={tl._id}
                                      tasks={tl.tasks}
                                      title={tl.title}
-                                     filterValue={tl.filterValue = 'All'}
+                                     filterValue={tl.filterValue}
                                      deleteTaskThunk={deleteTaskThunk}
                                      changeIsDone={changeIsDone}
                                      changeTitleTask={changeTitleTask}

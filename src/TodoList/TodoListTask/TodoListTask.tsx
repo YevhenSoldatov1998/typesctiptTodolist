@@ -16,8 +16,9 @@ interface IProps {
 const TodoListTask: React.FC<IProps> = ({deleteTask, updateTaskThunk, changeIsDone,changeTitleTask, todoId, task, ...props}) => {
     const [editMode, setEditMode] = useState(false);
     const [title, setTitle] = useState(task.title);
-    const onIsDoneChanged = () => {
-        changeIsDone(todoId, task._id);
+    const onIsDoneChanged = (e: any) => {
+        const value = e.target.checked;
+        updateTaskThunk(todoId, task._id , {status: value});
     };
 
     const call_changeTitleTask = (e: ChangeEvent<HTMLInputElement>) => {
@@ -39,8 +40,8 @@ const TodoListTask: React.FC<IProps> = ({deleteTask, updateTaskThunk, changeIsDo
 
     return (
         <div className={containerCssClass}>
-            {/*<input type="checkbox" checked={task.status}*/}
-            {/*       onChange={onIsDoneChanged}/>*/}
+            <input type="checkbox" checked={task.status}
+                   onChange={onIsDoneChanged}/>
             {editMode
                 ?
                 <input onBlur={deactivateEditMode} onChange={call_changeTitleTask} autoFocus={true} value={title}/>

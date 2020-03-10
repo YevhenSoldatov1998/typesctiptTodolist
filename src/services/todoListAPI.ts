@@ -6,7 +6,6 @@ export const todoListAPI = {
         return instance.get('todo-lists').then(res => res.data)
     },
     deleteTodoListItem: (todoListId: string) => {
-        debugger
         return instance.delete(`todo-lists/${todoListId}`)
     },
     addTodoLists: (title: string) => {
@@ -16,7 +15,7 @@ export const todoListAPI = {
         return instance.get(`todo-lists/${todoListId}/tasks`)
     },
     addTask: (todoListId: string, task: any) => {
-        return instance.post(`todo-lists/${todoListId}/tasks`, {title: task})
+        return instance.post(`todo-lists/${todoListId}/tasks`, {title: task}).then(res=> res.data)
     },
     deleteTask: (todoListId: string, taskId: string) => {
         return instance.delete(`todo-lists/${todoListId}/tasks/${taskId}`)

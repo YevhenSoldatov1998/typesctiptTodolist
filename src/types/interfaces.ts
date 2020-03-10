@@ -8,7 +8,7 @@ export interface ITask {
     description?: string,
     title: string,
     completed: boolean,
-    status: number,
+    status: boolean,
     priority: number,
     startDate?: string,
     deadline?: string,
@@ -21,7 +21,7 @@ export interface ITaskUpdate {
     title?: string,
     description?: string,
     completed?: boolean,
-    status?: number,
+    status?: boolean,
     priority?: number,
     startDate?: string,
     deadline?: string
