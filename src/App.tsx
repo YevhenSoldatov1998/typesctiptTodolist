@@ -14,6 +14,9 @@ import {
 } from "./redux/todo-reducer";
 import {appStateType} from "./redux/store";
 import {ITodoList} from "./types/interfaces";
+import {createStyles, Paper, Theme} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 
 interface IProps {
     addTodoListThunk: Function,
@@ -50,29 +53,67 @@ const App: React.FC<packedPropsType> = (
     useEffect(() => {
         getTodoListsThunk();
     }, []);
+    const useStyles = makeStyles((theme: Theme) =>{
+        debugger
+        return createStyles({
+            title: {
+                position: 'absolute',
+                top: -30,
+                opacity: 0.3,
+                left: 0,
+                width: '100%'
+            },
+            paper: {
+                position: 'relative',
+                padding: theme.spacing(1),
+                margin: theme.spacing(2),
+                marginTop: 50,
+                width: `calc(25% - ${theme.spacing(4)}px)`,
+                [theme.breakpoints.down('md')]:{
+                    padding: theme.spacing(1),
+                    margin: theme.spacing(1),
+                    width: `calc(33% - ${theme.spacing(2)}px)`,
+                },
+                [theme.breakpoints.down('sm')]:{
+                    width: `calc(50% - ${theme.spacing(2)}px)`
+                },
+                [theme.breakpoints.down('xs')]:{
+                    width: 300
+                }
 
+            }
+        })}
+    );
+    const classes = useStyles();
     return (
         <>
             <div>
-                <AddNewItemForm addTodo={call_addTodoList}/>
+                <AddNewItemForm forTasks={false} addTodo={call_addTodoList}/>
             </div>
             <div className="App">
                 {todoLists.map((tl: any) => {
-                    return <TodoList todoId={tl._id}
-                                     key={tl._id}
-                                     tasks={tl.tasks}
-                                     title={tl.title}
-                                     filterValue={tl.filterValue}
-                                     deleteTaskThunk={deleteTaskThunk}
-                                     changeIsDone={changeIsDone}
-                                     changeTitleTask={changeTitleTask}
-                                     deleteTodoListThunk={deleteTodoListThunk}
-                                     changeFilter={changeFilter}
-                                     getTaskThunk={getTaskThunk}
-                                     addTaskThunk={addTaskThunk}
-                                     updateTaskThunk = {updateTaskThunk}
+                    return (
+                        <Paper className={classes.paper} elevation={3}>
+                            <Typography variant="h6"
+                                        className={classes.title}
+                            >{tl.title}</Typography>
+                            <TodoList todoId={tl._id}
+                                      title = {tl.title}
+                                      key={tl._id}
+                                      tasks={tl.tasks}
+                                      filterValue={tl.filterValue}
+                                      deleteTaskThunk={deleteTaskThunk}
+                                      changeIsDone={changeIsDone}
+                                      changeTitleTask={changeTitleTask}
+                                      deleteTodoListThunk={deleteTodoListThunk}
+                                      changeFilter={changeFilter}
+                                      getTaskThunk={getTaskThunk}
+                                      addTaskThunk={addTaskThunk}
+                                      updateTaskThunk={updateTaskThunk}
 
-                    />
+                            />
+                        </Paper>
+                    )
                 })}
             </div>
         </>

@@ -1,11 +1,14 @@
 import React, {useEffect} from 'react';
 import '../App.css';
-import TodoListTitle from "./TodoListTitle";
 import AddNewItemForm from "../AddNewItemForm";
 import TodoListTasks from "./TodoListTasks";
-import {useState} from 'react'
 import TodoListFooter from "./TodoListFooter";
 import {ITask} from "../types/interfaces";
+import ClearIcon from '@material-ui/icons/Clear';
+import MyPopover from "../util/popover/MyPopover";
+import IconButton from "@material-ui/core/IconButton";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import {createStyles} from "@material-ui/core";
 
 interface ITodoList {
     deleteTodoListThunk: Function,
@@ -13,16 +16,16 @@ interface ITodoList {
     changeIsDone: Function,
     changeFilter: Function
     todoId: string,
+    title: string,
     filterValue: string,
     tasks: Array<ITask>,
-    title: string,
     getTaskThunk: Function,
     addTaskThunk: Function,
     deleteTaskThunk: Function
     updateTaskThunk: Function
 }
 
-const TodoList: React.FC<ITodoList> = ({
+const TodoList: React.FC<ITodoList & any> = ({
                                            title, getTaskThunk,
                                            addTaskThunk,
                                            changeIsDone, deleteTodoListThunk,
@@ -39,13 +42,36 @@ const TodoList: React.FC<ITodoList> = ({
     useEffect(() => {
         getTaskThunk(todoId)
     }, []);
-
+    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
+    const handlePopoverOpen = (event: any) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const open = Boolean(anchorEl);
+    const useStyles = makeStyles(
+        createStyles({
+            todoDelete: {
+                position: 'absolute',
+                right: 5,
+                top: 5
+            }
+        })
+    )
+    const classes = useStyles()
     return (
         <div className="todoList">
             <div className="todoList-header">
-                <button onClick={call_deleteTodoList}>&times;</button>
-                <TodoListTitle title={title}/>
-                <AddNewItemForm addTodo={call_addTask}/>
+                <MyPopover anchorEl={anchorEl}  open={open} handlePopoverClose={handlePopoverClose}>delete todo</MyPopover>
+                <ClearIcon onMouseEnter={handlePopoverOpen}
+                           onMouseLeave={handlePopoverClose}
+                           onClick={call_deleteTodoList}
+                           className={classes.todoDelete}
+                />
+               <span>
+                   <AddNewItemForm forTasks addTodo={call_addTask}/>
+               </span>
             </div>
             <TodoListTasks tasks={tasks && tasks.filter((task: any) => {
                 if (filterValue === 'All') {

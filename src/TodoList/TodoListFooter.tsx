@@ -1,43 +1,56 @@
-import React from 'react';
+import React, {FC} from 'react';
 import '../App.css';
+import {BottomNavigation} from "@material-ui/core";
+import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
+import {makeStyles} from "@material-ui/core/styles";
+import DoneAllIcon from '@material-ui/icons/DoneAll';
+import DoneIcon from '@material-ui/icons/Done';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
+import Divider from "@material-ui/core/Divider";
+
 interface IProps {
     changeFilter: Function,
     todoId: string,
     filterValue: string
 }
-class TodoListFooter extends React.Component<IProps> {
 
+const TodoListFooter: FC<IProps> = (props: any) => {
 
-    state = {
-        isHidden: false
-    };
+    const onAllFilterClick = () => props.changeFilter(props.todoId, "All");
+    const onCompletedFilterClick = () => props.changeFilter(props.todoId, "Completed");
+    const onActiveFilterClick = () => props.changeFilter(props.todoId, "Active");
+    const useStyles = makeStyles({
+        root: {
+            width: '100%'
+        },
+    });
+    const classes = useStyles();
+    const [value, setValue] = React.useState(0);
 
+    return (
+        <>
+            <Divider />
 
-    onAllFilterClick = () =>  this.props.changeFilter(this.props.todoId, "All");
-    onCompletedFilterClick = () =>  this.props.changeFilter(this.props.todoId, "Completed");
-    onActiveFilterClick = () => this.props.changeFilter(this.props.todoId, "Active");
-
-    onShowFiltersClick = () => this.setState({isHidden: true});
-    onHideFiltersClick = () => this.setState({isHidden: false});
-
-    render() {
-
-        let classForAll = this.props.filterValue === "All" ? "filter-active" : "";
-        let classForCompleted = this.props.filterValue === "Completed" ? "filter-active" : "";
-        let classForActive = this.props.filterValue === "Active" ? "filter-active" : "";
-        return (
             <div className="todoList-footer">
-                { !this.state.isHidden && <div>
-                     <button onClick={ this.onAllFilterClick } className={classForAll}>All</button>
-                     <button onClick={ this.onCompletedFilterClick } className={classForCompleted}>Completed</button>
-                     <button onClick={ this.onActiveFilterClick } className={classForActive}>Active</button>
-                  </div>
-                }
-                { !this.state.isHidden && <span onClick={ this.onShowFiltersClick }>hide</span> }
-                { this.state.isHidden && <span onClick={ this.onHideFiltersClick }>show</span> }
+                <BottomNavigation
+                    value={value}
+                    onChange={(event, newValue) => {
+                        setValue(newValue);
+                    }}
+                    showLabels
+                    className={classes.root}
+                >
+                    <BottomNavigationAction onClick={onAllFilterClick} label="All" icon={<DoneAllIcon/>}/>
+                    <BottomNavigationAction onClick={onCompletedFilterClick} label="Completed" icon={<DoneIcon/>}/>
+                    <BottomNavigationAction onClick={onActiveFilterClick} label="Active"
+                                            icon={<PlaylistAddCheckIcon/>}/>
+                </BottomNavigation>
+
+
             </div>
-        );
-    }
+        </>
+    );
+
 }
 
 export default TodoListFooter;
