@@ -72,6 +72,7 @@ const App: React.FC<packedPropsType> = (
                 [theme.breakpoints.down('md')]:{
                     padding: theme.spacing(1),
                     margin: theme.spacing(1),
+                    marginTop: 50,
                     width: `calc(33% - ${theme.spacing(2)}px)`,
                 },
                 [theme.breakpoints.down('sm')]:{
@@ -87,7 +88,7 @@ const App: React.FC<packedPropsType> = (
     const classes = useStyles();
     return (
         <>
-            <div>
+            <div className={"header"}>
                 <AddNewItemForm forTasks={false} addTodo={call_addTodoList}/>
             </div>
             <div className="App">
